@@ -43,5 +43,5 @@ If no template is found, fall back to a minimal structure: **Summary**, **Change
   ```
   gh pr create --title "<title>" --body "<body>"
   ```
-  Append `--reviewer`, `--label`, `--base`, or `--draft` if the user provided them.
+  Append `--reviewer`, `--label`, `--base`, `--draft`, or `--assignee @me` if the user provided them or wants to self-assign.
 - Return the PR URL.
