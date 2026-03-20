@@ -14,7 +14,7 @@ description: >-
 
 | Topic | Default |
 |-------|---------|
-| **Python** | **Second-latest** stable release (e.g. if newest is 3.14, use 3.13). Resolve with `uv python list` / official releases; set `requires-python` accordingly. |
+| **Python** | **Second-latest** stable release (e.g. if newest is 3.14, use 3.13). Resolve with `uv python list` / official releases; set `requires-python` accordingly. ML libraries (PyTorch, JAX, NumPy) typically lag one release cycle, so latest Python often has no wheels yet. |
 | **Package manager** | **uv** |
 | **Layout** | **`src/<package>/`** package layout |
 | **Linter / formatter** | **Ruff** |

@@ -31,6 +31,7 @@ Use these when project-specific rules are silent. If `.cursor/rules/project-cont
 - **Start with plain functions** as the default unit of organization. When logic branches on types/names repeatedly or one signature cannot express multiple behaviors, consider patterns (Strategy, Registry, etc.)—reactively, not preemptively.
 - **Prefer composition over inheritance** unless a subclass clearly specializes behavior from a base.
 - **Liskov substitution:** Subtypes must be substitutable for their base. Prefer `Generic[T]` over `object`/`Any` for payloads when it clarifies contracts.
+- **Narrow interfaces:** Keep `Protocol` definitions focused on one capability. A type depending on a large Protocol is harder to substitute and test than one depending on a small, focused one. Split a Protocol if callers only ever use part of it.
 - **Private helpers in moderation:** Extract a helper when a function is too long and splits naturally, or when logic is reused. Closures inside a function are fine when the helper needs local context and is not reused elsewhere. Avoid monolithic “do everything” functions.
 
 ### Naming
