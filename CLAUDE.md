@@ -12,8 +12,9 @@ Use these when project-specific rules are silent. If `.cursor/rules/project-cont
 
 ## Tooling and quality gate
 
-- **Formatter:** If the repo defines one (e.g. `ruff format`, `black`, Prettier, `npm run format`), run it on **files you changed** before finishing.
-- **Linter / type checker:** If configured (`ruff`, `flake8`, `mypy`, `pyright`, `ty`, etc.), fix **issues your changes introduced**. Leave pre-existing violations alone unless you are already editing that code.
+- **Formatter/Linter (ruff):** Do NOT run `ruff check` or `ruff format` manually — a `PostToolUse` hook runs them automatically after every file edit in Claude Code. Running them manually is redundant and wastes a turn.
+- **Other linters/type checkers:** If configured (`mypy`, `pyright`, `ty`, etc.), fix **issues your changes introduced**. Leave pre-existing violations alone unless you are already editing that code.
+- **Other formatters:** If the repo uses `black`, Prettier, `npm run format`, etc. (not ruff), run it on **files you changed** before finishing.
 - **No project linter config:** If there is **no** `[tool.ruff]` / project `ruff.toml` / `.ruff.toml` (and no equivalent for other tools), check for a **user-level** Ruff config at `$XDG_CONFIG_HOME/ruff/ruff.toml` (typically `~/.config/ruff/ruff.toml`). Ruff discovers it when no project config exists; otherwise pass `--config` to that path explicitly. Do the same idea for **ty**: if there is no `[tool.ty]` / project `ty.toml`, use `$XDG_CONFIG_HOME/ty/ty.toml` (`~/.config/ty/ty.toml`) when running `ty` so checks still use consistent rules.
 - **Tests:** If the project has a test suite (e.g. `pytest`, `tests/`, `*_test.py`), add or update tests for new behavior and match existing **layout, naming, and fixtures**.
 
