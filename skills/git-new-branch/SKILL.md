@@ -46,12 +46,10 @@ User wants a **new branch** and to **record and publish** work (staged and/or un
 
 1. `git status` — see staged vs unstaged.
 2. **Staging scope** (infer from wording; if ambiguous, ask once):
-   - **“Commit what I staged” / “staged only”** → `git diff --cached --stat`, then commit **without** `git add -A` of unstaged files.
-   - **“Commit everything” / “all changes” / “including unstaged”** → `git add` only the paths relevant to the task (prefer explicit paths from context); avoid sweeping unrelated files. If the user explicitly wants the whole repo: `git add -A` with a warning if unrelated changes appear.
-3. **Commit message:** Conventional style, imperative subject, body if needed (match project norms). Example: `feat: add training-only OHEM with Hydra knobs`.
-4. `git checkout -b <prefix>/<slug>` **before** commit if not already on the new branch — **typical order**: create branch from current tip, then add/commit on that branch. If they already created an empty branch, commit there.
-   - Preferred sequence: ensure clean or intentional partial state → `git switch -c <branch>` → stage → `git commit` → `git push -u origin <branch>`.
-5. `git push -u origin <branch>` so upstream is set.
+   - **”Commit what I staged” / “staged only”** → `git diff --cached --stat`, then commit **without** `git add -A` of unstaged files.
+   - **”Commit everything” / “all changes” / “including unstaged”** → `git add` only the paths relevant to the task (prefer explicit paths from context); avoid sweeping unrelated files. If the user explicitly wants the whole repo: `git add -A` with a warning if unrelated changes appear.
+3. **Branch, commit, and push:** create the branch from the current tip, then follow the **commit** skill for pre-commit hooks, staging, and commit message format. Typical sequence:
+   - `git switch -c <branch>` → stage → commit per **commit** skill → `git push -u origin <branch>`.
 
 If there is **nothing to commit** (clean tree), still create the branch and push only if they asked to push; otherwise explain there was nothing to commit.
 
