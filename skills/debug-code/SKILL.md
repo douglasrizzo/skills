@@ -1,11 +1,11 @@
 ---
 name: debug-code
 description: >-
-  Systematically investigates and fixes bugs in Python and ML codebases: reads error
-  traces, narrows the fault, checks numerical issues (NaNs, infs, shape mismatches),
-  CUDA errors, wrong loss curves, and import/dependency problems. Use when the user
-  reports an error, unexpected behavior, a model not training, or asks to investigate
-  a bug.
+  Systematically investigates and fixes bugs in codebases: reads error traces, narrows
+  the fault, and applies language-appropriate debugging strategies. Includes
+  Python- and ML-specific checks (NaNs, infs, shape mismatches, CUDA errors, wrong
+  loss curves, import/dependency problems). Use when the user reports an error,
+  unexpected behavior, a model not training, or asks to investigate a bug.
 ---
 
 # Debug code

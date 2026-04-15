@@ -13,7 +13,7 @@ description: >-
 ## 1. Align
 
 - Read **project** `.cursor/rules/project-context.mdc` and/or `AGENTS.md` if present.
-- Global design and tooling expectations are in the **python-engineering-standards** rule (always-on when configured).
+- Global design and tooling expectations are in the engineering standards (`AGENTS.md` / `CLAUDE.md`).
 
 ## 2. Clarify
 
@@ -36,7 +36,7 @@ Wait for confirmation on the plan before writing code.
 - Follow the agreed plan; surface deviations before making them.
 - Match existing **style, types, imports, and patterns** in the repo.
 - Keep the change set focused; avoid unrelated refactors.
-- **Canonical Python:** when a feature has multiple valid implementations (e.g. `TypedDict` vs dataclass, `@property` vs descriptor, `__init_subclass__` vs metaclass), choose the single most correct and modern approach. Note the choice briefly if non-obvious.
+- **Canonical idioms:** choose the single most correct and modern approach for the language. For Python projects, apply the idiomatic choices from the `## Python projects` section of the engineering standards (dataclass vs TypedDict, Enum vs string constants, pathlib, etc.). Note the choice briefly if non-obvious.
 
 ## 5. Validate
 

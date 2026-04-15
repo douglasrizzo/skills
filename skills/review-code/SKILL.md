@@ -12,7 +12,7 @@ description: >-
 ## 1. Align
 
 - Read **project** `.cursor/rules/project-context.mdc` and/or `AGENTS.md` if present.
-- Global design and tooling expectations are in the **python-engineering-standards** rule (always-on when configured).
+- Global design and tooling expectations are in the engineering standards (`AGENTS.md` / `CLAUDE.md`).
 
 ## 2. Read and understand
 
@@ -24,7 +24,7 @@ description: >-
 
 Work through each lens and collect findings before writing any code:
 
-- **Canonical idioms:** flag non-canonical implementations and name the preferred modern alternative (e.g. dataclass over manual `__init__`, `Enum` over bare string constants, `pathlib` over `os.path`, structural pattern matching over long `if/elif` chains where it improves clarity).
+- **Canonical idioms (Python projects):** flag non-idiomatic patterns — prefer dataclass, Enum, pathlib, structural pattern matching where it improves clarity. See the `## Python projects` section in the engineering standards for the full list, and `rules/python-examples.md` for before/after patterns.
 - **DRY:** identify logic duplicated within the target code or elsewhere in the repo; plan to consolidate.
 - **Module organization:** are symbols in the right modules? Flag anything that belongs elsewhere or should be extracted to a new module per **python-engineering-standards**.
 - **Design patterns:** consult the **design-patterns-ml** skill. Apply the reactive smell table to what you see; apply the proactive table only if extensibility is clearly needed. Make an explicit decision — chosen pattern with brief justification, or "no pattern warranted."
