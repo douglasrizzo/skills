@@ -21,48 +21,40 @@ skills/
 
 ## Installation
 
-Clone this repo to a stable location. The instructions below use symlinks so any edit here is immediately reflected everywhere — no copying or syncing needed.
+Clone this repo to a stable location. Use the installer script below to create symlinks, so any edit here is immediately reflected everywhere.
 
-**Run each global install block from this repository’s root** (the directory that contains `CLAUDE.md`). Each block sets `REPO_ROOT=$(pwd -P)` and checks for `CLAUDE.md`, so you do not need to export a path manually.
+Run the installer from this repository's root:
+
+```bash
+./scripts/install-skills.sh claude
+./scripts/install-skills.sh codex
+./scripts/install-skills.sh cursor
+```
+
+Pass exactly one agent name: `claude`, `codex`, or `cursor`.
 
 ### Claude Code (global, one-time)
 
 ```bash
-REPO_ROOT=$(pwd -P)
-[ -f "$REPO_ROOT/CLAUDE.md" ] || { echo >&2 "Error: run this from the skills repo root."; exit 1; }
-
-# Symlink the rules file as your global CLAUDE.md
-ln -sf "$REPO_ROOT/CLAUDE.md" ~/.claude/CLAUDE.md
-
-# Symlink each skill as a global custom command
-mkdir -p ~/.claude/commands
-for dir in "$REPO_ROOT"/skills/*/; do
-  name=$(basename "$dir")
-  ln -sf "$dir/SKILL.md" ~/.claude/commands/"$name".md
-done
+./scripts/install-skills.sh claude
 ```
 
 The engineering standards are injected into every session automatically. Skills become slash commands available everywhere: `/implement-feature`, `/review-code`, `/debug-code`, etc.
+
+### Codex (global, one-time)
+
+```bash
+./scripts/install-skills.sh codex
+```
+
+Codex loads global skills from `~/.codex/skills/<skill-name>/SKILL.md`, so the installer creates one symlinked directory per skill there.
 
 ### Cursor (global, one-time)
 
 Cursor loads **rules** from `~/.cursor/rules/` (files named `*.mdc`) and **agent skills** from `~/.cursor/skills/<skill-name>/SKILL.md`. Symlink this repo so edits here apply everywhere. Do not use `~/.cursor/skills-cursor/` — that directory is reserved for Cursor’s built-in skills.
 
 ```bash
-REPO_ROOT=$(pwd -P)
-[ -f "$REPO_ROOT/CLAUDE.md" ] || { echo >&2 "Error: run this from the skills repo root."; exit 1; }
-
-mkdir -p ~/.cursor/rules ~/.cursor/skills
-
-# Always-on engineering standards (CLAUDE.md → rule file)
-ln -sf "$REPO_ROOT/CLAUDE.md" ~/.cursor/rules/python-engineering-standards.mdc
-
-# One directory per skill; each contains SKILL.md
-for dir in "$REPO_ROOT"/skills/*/; do
-  name=$(basename "$dir")
-  mkdir -p ~/.cursor/skills/"$name"
-  ln -sf "$dir/SKILL.md" ~/.cursor/skills/"$name"/SKILL.md
-done
+./scripts/install-skills.sh cursor
 ```
 
 `CLAUDE.md` is stored as `python-engineering-standards.mdc` so Cursor treats it as a rule; the YAML frontmatter (`alwaysApply: true`, `description`, etc.) is unchanged.
