@@ -36,6 +36,39 @@ Cover, in order of priority:
 
 Skip scenarios that are already covered by existing tests. Present the plan and wait for confirmation before writing code.
 
+## 3.5. Identify property-based candidates (optional)
+
+After the test plan, scan the target module for **pure functions and data transformations** — parsers, validators, formatters, enum converters, calculators.
+
+For each candidate, add a hypothesis scenario to the plan:
+
+```
+- <function>: property — <invariant that must always hold>
+```
+
+Then, when writing the test, use `@given` with the tightest sensible strategy:
+
+- `st.text(max_size=240)` not bare `st.text()`.
+- `st.floats(min_value=0.0, allow_nan=False)` for domain-restricted floats.
+- `st.sampled_from(list(MyEnum))` for enum round-trip tests.
+- Chain `.map(...)` to produce formatted inputs from raw values.
+- Add `@example(...)` for known edge cases or previous regressions.
+
+If hypothesis is not already a dev dependency, add it: `uv add --dev hypothesis`.
+
+Ensure `conftest.py` registers a CI profile (create if it doesn't exist):
+
+```python
+from hypothesis import settings
+import os
+
+settings.register_profile("ci", max_examples=50)
+if os.environ.get("CI"):
+    settings.load_profile("ci")
+```
+
+Skip this phase if the module has no pure transformation logic (e.g., it is entirely stateful or side-effectful).
+
 ## 4. Write
 
 ### What to test
