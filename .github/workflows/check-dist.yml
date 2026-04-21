@@ -1,0 +1,19 @@
+name: Check generated dist
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check-dist:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Rebuild dist
+        run: ./scripts/build.sh
+
+      - name: Verify dist is up to date
+        run: git diff --exit-code -- dist

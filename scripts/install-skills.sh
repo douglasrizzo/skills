@@ -57,15 +57,24 @@ install_claude() {
   local repo_root=$1
 
   # Engineering standards (generated)
-  mkdir -p "$HOME/.claude/commands" "$HOME/.claude/rules"
+  mkdir -p "$HOME/.claude/skills" "$HOME/.claude/rules"
   ln -sf "$repo_root/dist/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
 
-  # Skills → slash commands
-  local dir name
+  # Skills: symlink the whole skill directory so sibling files (scripts, assets)
+  # travel with the skill.
+  local dir name target
   for dir in "$repo_root"/skills/*/; do
     [ -d "$dir" ] && [ -f "$dir/SKILL.md" ] || continue
     name=$(basename "$dir")
-    ln -sf "$dir/SKILL.md" "$HOME/.claude/commands/$name.md"
+    # Drop stale single-file slash-command install from earlier versions
+    rm -f "$HOME/.claude/commands/$name.md"
+    target="$HOME/.claude/skills/$name"
+    if [ -L "$target" ]; then
+      rm -f "$target"
+    elif [ -d "$target" ]; then
+      rm -rf "$target"
+    fi
+    ln -sfn "${dir%/}" "$target"
   done
 
   # Rules: python examples reference + context7
@@ -74,7 +83,7 @@ install_claude() {
 
   echo "Installed for Claude Code:"
   echo "  ~/.claude/CLAUDE.md → dist/CLAUDE.md"
-  echo "  ~/.claude/commands/<skill>.md × $(ls "$repo_root"/skills/*/SKILL.md | wc -l | tr -d ' ')"
+  echo "  ~/.claude/skills/<skill> × $(ls -d "$repo_root"/skills/*/ | wc -l | tr -d ' ')"
   echo "  ~/.claude/rules/python-examples.md"
   echo "  ~/.claude/rules/context7.md"
 }
@@ -86,13 +95,18 @@ install_codex() {
   mkdir -p "$HOME/.codex/skills" "$HOME/.codex/rules"
   ln -sf "$repo_root/dist/AGENTS.md" "$HOME/.codex/AGENTS.md"
 
-  # Skills
-  local dir name
+  # Skills: symlink the whole skill directory so sibling files travel with it.
+  local dir name target
   for dir in "$repo_root"/skills/*/; do
     [ -d "$dir" ] && [ -f "$dir/SKILL.md" ] || continue
     name=$(basename "$dir")
-    mkdir -p "$HOME/.codex/skills/$name"
-    ln -sf "$dir/SKILL.md" "$HOME/.codex/skills/$name/SKILL.md"
+    target="$HOME/.codex/skills/$name"
+    if [ -L "$target" ]; then
+      rm -f "$target"
+    elif [ -d "$target" ]; then
+      rm -rf "$target"
+    fi
+    ln -sfn "${dir%/}" "$target"
   done
 
   # Rules: python examples reference
@@ -100,7 +114,7 @@ install_codex() {
 
   echo "Installed for Codex:"
   echo "  ~/.codex/AGENTS.md → dist/AGENTS.md"
-  echo "  ~/.codex/skills/<skill>/SKILL.md × $(ls "$repo_root"/skills/*/SKILL.md | wc -l | tr -d ' ')"
+  echo "  ~/.codex/skills/<skill> × $(ls -d "$repo_root"/skills/*/ | wc -l | tr -d ' ')"
   echo "  ~/.codex/rules/python-examples.md"
 }
 
@@ -124,13 +138,18 @@ install_cursor() {
     echo "  Removed stale: python-engineering-standards.mdc"
   fi
 
-  # Skills
-  local dir name
+  # Skills: symlink the whole skill directory so sibling files travel with it.
+  local dir name target
   for dir in "$repo_root"/skills/*/; do
     [ -d "$dir" ] && [ -f "$dir/SKILL.md" ] || continue
     name=$(basename "$dir")
-    mkdir -p "$HOME/.cursor/skills/$name"
-    ln -sf "$dir/SKILL.md" "$HOME/.cursor/skills/$name/SKILL.md"
+    target="$HOME/.cursor/skills/$name"
+    if [ -L "$target" ]; then
+      rm -f "$target"
+    elif [ -d "$target" ]; then
+      rm -rf "$target"
+    fi
+    ln -sfn "${dir%/}" "$target"
   done
 
   # Rules: python examples reference
@@ -141,7 +160,7 @@ install_cursor() {
   echo "  ~/.cursor/rules/engineering-standards.mdc → dist/engineering-standards.mdc"
   echo "  ~/.cursor/rules/context7.mdc → dist/context7.mdc"
   echo "  ~/.cursor/rules/python-examples.mdc"
-  echo "  ~/.cursor/skills/<skill>/SKILL.md × $(ls "$repo_root"/skills/*/SKILL.md | wc -l | tr -d ' ')"
+  echo "  ~/.cursor/skills/<skill> × $(ls -d "$repo_root"/skills/*/ | wc -l | tr -d ' ')"
 }
 
 main "$@"

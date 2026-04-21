@@ -40,12 +40,15 @@ scripts/
   build.sh                           # Generates dist/ from fragments/
   install-skills.sh                  # Runs build.sh, then symlinks to agent locations
 skills/
+  audit-mutmut/                      # Run mutmut and add tests to kill survivors
   bootstrap-python-project/          # Scaffold a new Python repo
   commit/                            # Atomic commits with pre-commit
   create-jira-ticket/                # Draft a Jira ticket from branch contents
   create-plan/                       # Create a multi-phase .plans/ directory
   debug-code/                        # Diagnose errors, NaNs, shape mismatches, CUDA
   design-patterns-ml/                # When and how to apply patterns in ML codebases
+  find-dead-and-duplicate-code/      # Report dead code and duplicate logic
+  generate-hypothesis-tests/         # Generate and refine property-based tests
   git-new-branch/                    # Create a branch with optional commit + push
   implement-feature/                 # Plan, place, DRY-check, implement, validate
   implement-tests/                   # Add or extend tests with ML-specific guidance
@@ -69,6 +72,19 @@ Clone this repo to a stable location. Run the installer from the repository root
 
 The installer runs `build.sh` automatically, then symlinks the generated files and
 skills to the selected agent's global config directory.
+
+If you want commits to keep generated outputs in sync automatically, enable the
+included pre-commit hook:
+
+```bash
+pre-commit install
+```
+
+The hook rebuilds `dist/` whenever files under `fragments/` or `scripts/build.sh`
+change.
+
+GitHub Actions also rebuilds `dist/` on pushes and pull requests and fails if the
+generated files are out of date.
 
 ### Claude Code (global, one-time)
 
@@ -97,7 +113,7 @@ Installs `~/.codex/AGENTS.md` (engineering standards + RTK + Context7), skills u
 Installs two rule files and all skills:
 - `~/.cursor/rules/engineering-standards.mdc` — always-on core + Python section
 - `~/.cursor/rules/context7.mdc` — Context7 MCP instructions
-- `~/.cursor/skills/<skill>/SKILL.md` — one directory per skill
+- `~/.cursor/skills/<skill>/` — one directory symlink per skill
 
 If `python-engineering-standards.mdc` exists from a previous install, it is removed
 automatically.
@@ -120,8 +136,13 @@ ln -sf "$SKILLS_ROOT/dist/context7.mdc" \
 for dir in "$SKILLS_ROOT"/skills/*/; do
   [ -d "$dir" ] && [ -f "$dir/SKILL.md" ] || continue
   name=$(basename "$dir")
-  mkdir -p .cursor/skills/"$name"
-  ln -sf "$dir/SKILL.md" .cursor/skills/"$name"/SKILL.md
+  target=.cursor/skills/"$name"
+  if [ -L "$target" ]; then
+    rm -f "$target"
+  elif [ -d "$target" ]; then
+    rm -rf "$target"
+  fi
+  ln -sfn "${dir%/}" "$target"
 done
 ```
 
@@ -146,14 +167,17 @@ To rebuild `dist/` without reinstalling:
 Invoke a skill with its slash command:
 
 ```
-/implement-feature    /review-code          /debug-code
-/implement-tests      /open-pr              /review-pr
-/bootstrap-python-project                   /create-plan
-/next-phase           /review-plans         /rewrite-branch-commits
+/audit-mutmut                  /bootstrap-python-project /commit
+/create-jira-ticket            /create-plan              /debug-code
+/design-patterns-ml            /find-dead-and-duplicate-code
+/generate-hypothesis-tests     /git-new-branch
+/implement-feature             /implement-tests          /next-phase
+/open-pr                       /review-code              /review-plans
+/review-pr                     /rewrite-branch-commits
 ```
 
-The agent will follow the skill's workflow: clarify, plan, wait for your confirmation,
-then implement.
+The agent will follow the selected skill's workflow. Some skills are advisory and some
+perform implementation or repository operations.
 
 ### Cursor
 
@@ -179,7 +203,6 @@ prompt (e.g. "follow the implement-feature skill").
 - Engineering standards encode what should always be true (architecture, naming, patterns).
 - Skills encode workflows that require judgment and user interaction.
 - Design patterns are applied reactively to complexity, not preemptively to every file.
-- The agent plans before implementing and waits for confirmation before making changes.
 - `fragments/` is the source of truth; `dist/` files are assembled outputs.
 
 ## License
