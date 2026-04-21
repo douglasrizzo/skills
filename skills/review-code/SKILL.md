@@ -48,7 +48,7 @@ Work through each lens and collect findings before writing any code:
 
 ## 7. Validate
 
-- Run **linter/type checker**; fix new issues introduced by your changes. Fall back to user-level configs (`~/.config/ruff/ruff.toml`, `~/.config/ty/ty.toml`) if no project config exists.
+- Run **linter/type checker**; fix new issues introduced by your changes. Fall back to user-level configs (`~/.config/ruff/ruff.toml`, `~/.config/ty/ty.toml`) if no project config exists. Also run `uv run pylint <package>`; the global baseline is `~/.config/pylintrc` and project-level `[tool.pylint.*]` in `pyproject.toml` overrides it.
 - Run **tests**; all pre-existing tests must still pass.
 
 ## 8. Close

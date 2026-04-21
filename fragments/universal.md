@@ -33,3 +33,7 @@ Use these when project-specific rules are silent. If `.cursor/rules/project-cont
 ### Design patterns (on demand)
 
 - For a **catalog of patterns** (Strategy, registry, Facade, callbacks, adapters, when to use proactively vs after smells) and **ML-platform** guidance, consult the **design-patterns-ml** skill when complexity warrants it — do not treat it as required for every change.
+
+## Commit hygiene
+
+- **Never add `Co-Authored-By: Claude` (or any AI attribution) to commit messages.** Authorship belongs to the human committing the work.

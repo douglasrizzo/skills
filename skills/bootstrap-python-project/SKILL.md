@@ -39,7 +39,7 @@ Ask only for what is still unknown after applying defaults:
 2. **`.gitignore`:** e.g.  
    `curl -fsSL -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Python.gitignore`  
    Append tool-specific lines (`.venv/`, `.ruff_cache/`, `.ty_cache/` if applicable) if missing.
-3. **Initialize uv:** `uv init` with appropriate flags; set `requires-python`, `[project]`, `[dependency-groups] dev` with `ruff`, `ty`, `pytest`, `pre-commit` (if requested).
+3. **Initialize uv:** `uv init` with appropriate flags; set `requires-python`, `[project]`, `[dependency-groups] dev` with `ruff`, `ty`, `pytest`, `pylint`, `pre-commit` (if requested). The global `~/.config/pylintrc` provides the pylint baseline; only add `[tool.pylint.*]` to `pyproject.toml` when the project needs to diverge from it.
 4. **Ruff in the project:** Add `[tool.ruff]` / `[tool.ruff.lint]` to **project** `pyproject.toml` with **Google** pydocstyle and the same line length / rule philosophy you use elsewhere (you may take inspiration from the user’s `~/.config/ruff/ruff.toml`, but **override** pydocstyle to `google` for greenfield). If the user keeps a shared user-level Ruff file, it is Numpy-oriented for legacy repos—new projects should still set Google in the project file so it takes precedence.
 5. **ty in the project:** Add `[tool.ty]` with sensible rules, or `ty.toml` beside `pyproject.toml`. If you need a baseline and the project has nothing yet, you may align with `~/.config/ty/ty.toml` and extend in-repo.
 6. **Tooling config:** pytest (`[tool.pytest.ini_options]` or `pytest.ini`), pre-commit, CI per user request. If pre-commit is added: `pre-commit autoupdate` then `pre-commit install` (invoke via `uv run` if needed).
@@ -50,7 +50,7 @@ If the user plans **plugins**, multiple backends, or multi-entry CLIs from day o
 
 ## User-level Astral config (optional reference)
 
-When explaining defaults, you may mention that the user can keep personal tool defaults under XDG paths: `~/.config/uv/uv.toml`, `~/.config/ruff/ruff.toml`, `~/.config/ty/ty.toml` (project files override these).
+When explaining defaults, you may mention that the user can keep personal tool defaults under XDG paths: `~/.config/uv/uv.toml`, `~/.config/ruff/ruff.toml`, `~/.config/ty/ty.toml`, `~/.config/pylintrc` (project files override these).
 
 ## Finish
 

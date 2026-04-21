@@ -41,7 +41,7 @@ Wait for confirmation on the plan before writing code.
 ## 5. Validate
 
 - Run the project's **formatter** on changed files if configured.
-- Run **linter/type checker**; fix violations **introduced by this change**. If the repo has no Ruff/ty config in the project, fall back to user-level configs: `~/.config/ruff/ruff.toml` and `~/.config/ty/ty.toml` (`$XDG_CONFIG_HOME` if set).
+- Run **linter/type checker**; fix violations **introduced by this change**. If the repo has no Ruff/ty config in the project, fall back to user-level configs: `~/.config/ruff/ruff.toml` and `~/.config/ty/ty.toml`. Also run `uv run pylint <package>`; the global baseline is `~/.config/pylintrc` and project-level `[tool.pylint.*]` in `pyproject.toml` overrides it.
 - Run **tests** if the repo has them; add or update tests when behavior changes (see **implement-tests** skill).
 
 ## 6. Close

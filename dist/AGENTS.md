@@ -36,6 +36,10 @@ Use these when project-specific rules are silent. If `.cursor/rules/project-cont
 
 - For a **catalog of patterns** (Strategy, registry, Facade, callbacks, adapters, when to use proactively vs after smells) and **ML-platform** guidance, consult the **design-patterns-ml** skill when complexity warrants it — do not treat it as required for every change.
 
+## Commit hygiene
+
+- **Never add `Co-Authored-By: Claude` (or any AI attribution) to commit messages.** Authorship belongs to the human committing the work.
+
 ## Python projects
 
 _Apply when `.py` files, `pyproject.toml`, or `setup.cfg` are present._
@@ -43,9 +47,10 @@ _Apply when `.py` files, `pyproject.toml`, or `setup.cfg` are present._
 ### Tooling
 
 - **Ruff:** A `PostToolUse` hook runs ruff automatically after every file edit in Claude Code. Do NOT run `ruff check` or `ruff format` manually — it is redundant and wastes a turn.
+- **Pylint:** Covers LSP violations, design metrics, and duplicate-code detection that Ruff does not. Run with `uv run pylint <package>` when validating. The global config lives at `~/.config/pylintrc`; project-level `[tool.pylint.*]` in `pyproject.toml` overrides it. Fix only issues your changes introduced.
 - **Type checker:** Fix only issues your changes introduced. If no project config exists, fall back to `~/.config/ty/ty.toml` (ty) and `~/.config/ruff/ruff.toml` (ruff).
 - **Package manager:** Use `uv` for installs and environment management (`uv sync`, `uv add`, `uv run`).
-- **Tests:** Use `pytest`; run via `uv run pytest` unless the project documents otherwise.
+- **Tests:** Use `pytest`; run via `uv run pytest` unless the project documented otherwise.
 
 ### Idiomatic Python
 
