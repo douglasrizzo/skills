@@ -17,6 +17,21 @@ actionable and large enough to be unambiguous.
 
 ## Workflow
 
+### 0. Determine write capability
+
+Before starting, check whether you can write files. If you are in Plan mode or otherwise
+read-only, you will not be able to create `.plans/` files. In that case:
+
+- Instead of writing files, present the complete plan as text output — all sections, all
+  phase files, the master plan, and the to-do list — formatted as they would appear on disk.
+- Append this note at the end:
+
+  > This plan was generated in read-only mode. To materialize these files, switch to Build
+  > mode and re-run this skill with the prompt "Materialize the plan from the text above
+  > into `.plans/` files."
+
+If write access is available (Build mode), proceed normally with file creation below.
+
 ### 1. Understand the work
 
 Ask targeted questions until you can write a plan that is concrete enough to implement
