@@ -20,7 +20,7 @@ description: >-
 One command — the script runs vulture, pylint similarities, and deepcsim, applies noise filters, and emits a single Markdown report:
 
 ```bash
-uv run ~/.claude/skills/find-dead-and-duplicate-code/find_code_smells.py <target>
+uv run ~/.agents/skills/find-dead-and-duplicate-code/find_code_smells.py <target>
 ```
 
 Pass `--format json` only when piping into downstream tooling. Default Markdown is for reading.
@@ -49,7 +49,7 @@ Useful flags:
 
 - Apply changes in small, reviewable steps.
 - Re-run the script after non-trivial refactors to confirm the report shrinks and nothing new regresses.
-- Run the project's tests and type checker (see `AGENTS.md` / `CLAUDE.md` for the project's commands).
+- Run the project's tests and type checker (see `AGENTS.md` for the project's commands).
 
 ## 6. Close
 

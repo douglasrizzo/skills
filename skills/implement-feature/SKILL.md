@@ -13,7 +13,7 @@ description: >-
 ## 1. Align
 
 - Read **project** `.cursor/rules/project-context.mdc` and/or `AGENTS.md` if present.
-- Global design and tooling expectations are in the engineering standards (`AGENTS.md` / `CLAUDE.md`).
+- Global design and tooling expectations are in the engineering standards (`AGENTS.md`).
 
 ## 2. Clarify
 

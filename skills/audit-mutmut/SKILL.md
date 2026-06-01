@@ -40,7 +40,7 @@ Prefer a project-local wrapper if it exists:
 uv run scripts/run_mutmut.py run
 
 # Otherwise, use the skill's bundled wrapper (handles macOS setproctitle crash):
-uv run ~/.claude/skills/audit-mutmut/run_mutmut.py run
+uv run ~/.agents/skills/audit-mutmut/run_mutmut.py run
 ```
 
 Mutmut can take several minutes on a large project. Capture the summary line at the end (killed / survived / timeout counts).
@@ -50,7 +50,7 @@ Mutmut can take several minutes on a large project. Capture the summary line at 
 List surviving mutants:
 
 ```bash
-uv run ~/.claude/skills/audit-mutmut/run_mutmut.py results
+uv run ~/.agents/skills/audit-mutmut/run_mutmut.py results
 ```
 
 Group survivors by source file and mutation type. Common mutation types and what they reveal:
@@ -84,7 +84,7 @@ Place new tests in the existing test file for that module. Follow the project's 
 Re-run mutmut:
 
 ```bash
-uv run ~/.claude/skills/audit-mutmut/run_mutmut.py run
+uv run ~/.agents/skills/audit-mutmut/run_mutmut.py run
 ```
 
 Confirm the survivor count dropped. Report:

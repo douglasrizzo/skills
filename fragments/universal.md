@@ -8,6 +8,11 @@ Use these when project-specific rules are silent. If `.cursor/rules/project-cont
 - **Type checkers:** If configured, fix only issues your changes introduced.
 - **Tests:** If a test suite exists, add or update tests for new behavior; match existing layout, naming, and fixtures.
 
+## Tool efficiency
+
+- **File moves and copies without edits:** Use shell commands (`mv`, `cp`, `ln -sfn`) instead of reading content then writing it. Only use `read` + `write` when the file needs content changes.
+- **Move then edit:** When a file needs to be moved AND edited, move it first with `mv`/`cp`, then apply targeted edits. Avoid reading the whole file just to rewrite it at a new location.
+
 ## Design and code organization
 
 ### Architecture

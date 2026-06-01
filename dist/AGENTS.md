@@ -10,6 +10,11 @@ Use these when project-specific rules are silent. If `.cursor/rules/project-cont
 - **Type checkers:** If configured, fix only issues your changes introduced.
 - **Tests:** If a test suite exists, add or update tests for new behavior; match existing layout, naming, and fixtures.
 
+## Tool efficiency
+
+- **File moves and copies without edits:** Use shell commands (`mv`, `cp`, `ln -sfn`) instead of reading content then writing it. Only use `read` + `write` when the file needs content changes.
+- **Move then edit:** When a file needs to be moved AND edited, move it first with `mv`/`cp`, then apply targeted edits. Avoid reading the whole file just to rewrite it at a new location.
+
 ## Design and code organization
 
 ### Architecture
@@ -71,35 +76,6 @@ Prefer the idiomatic form when it reads clearly; don't force it when a plain app
 - Avoid `Any` unless bridging untyped external code.
 
 For before/after examples of complex idioms, read `rules/python-examples.md`.
-
-# RTK - Rust Token Killer (Codex)
-
-**Usage**: Token-optimized CLI proxy. Always prefix shell commands with `rtk`.
-
-## Rule
-
-```bash
-rtk git status        rtk git diff
-rtk gh pr view        rtk gh run view
-rtk uv run pytest     rtk uv run ruff check .
-rtk ls                rtk which <cmd>
-```
-
-## Meta commands
-
-```bash
-rtk gain              # Token savings analytics
-rtk gain --history    # Command usage history with savings
-rtk proxy <cmd>       # Run raw command without RTK filtering (debugging)
-```
-
-## Verification
-
-```bash
-rtk --version
-rtk gain
-which rtk
-```
 
 # Context7
 
