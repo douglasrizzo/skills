@@ -22,13 +22,93 @@ description: >-
 
 ## 3. Evaluate
 
-Work through each lens and collect findings before writing any code:
+Launch all **six** in parallel so they run concurrently (if the diff includes SQL files or BigQuery Python code, include `review-bigquery-sql`; otherwise skip it):
 
-- **Canonical idioms (Python projects):** flag non-idiomatic patterns — prefer dataclass, Enum, pathlib, structural pattern matching where it improves clarity. See the `## Python projects` section in the engineering standards for the full list, and `rules/python-examples.md` for before/after patterns.
-- **DRY:** identify logic duplicated within the target code or elsewhere in the repo; plan to consolidate.
-- **Module organization:** are symbols in the right modules? Flag anything that belongs elsewhere or should be extracted to a new module per **python-engineering-standards**.
-- **Design patterns:** consult the **design-patterns-ml** skill. Apply the reactive smell table to what you see; apply the proactive table only if extensibility is clearly needed. Make an explicit decision — chosen pattern with brief justification, or "no pattern warranted."
-- **Naming and size:** names that repeat module or type context, functions doing more than one thing, classes mixing unrelated responsibilities.
+```
+task(
+  description="review types",
+  prompt="""Review the following diff for type annotation issues:
+
+<paste the full diff or list of changed files here>
+
+Project: <brief context about what was changed>""",
+  subagent_type="review-types")
+
+task(
+  description="review architecture",
+  prompt="""Review the following diff for architecture issues:
+
+<diff>
+
+Project: <context>""",
+  subagent_type="review-architecture")
+
+task(
+  description="review python style",
+  prompt="""Review the following diff for idiomatic Python, naming, and
+docstring issues:
+
+<diff>
+
+Project: <context>""",
+  subagent_type="review-python")
+
+task(
+  description="review training safety",
+  prompt="""Review the following diff for training pipeline safety issues
+(model forward contract, optimizer hygiene, Lightning hooks,
+reproducibility, config defaults, logging, SQL):
+
+<diff>
+
+Project: <context>""",
+  subagent_type="review-ml-safety")
+
+task(
+  description="review data safety",
+  prompt="""Review the following diff for data pipeline safety issues
+(DataLoader, multiprocessing, file validation, transforms,
+normalization, timm config):
+
+<diff>
+
+Project: <context>""",
+  subagent_type="review-data-safety")
+
+task(
+  description="review bigquery sql",
+  prompt="""Review the following diff for BigQuery SQL issues (safety, performance,
+cost, correctness):
+
+<diff>
+
+Project: <context>
+Focus on parameterized queries, SELECT *, partition filters,
+LIMIT/ORDER BY, UNION ALL, and string interpolation risks.""",
+  subagent_type="review-bigquery-sql")
+```
+
+**Only include `review-bigquery-sql` when the diff touches `.sql` files or Python files with BigQuery patterns** (`client.query`, `QueryJobConfig`, `query_parameters`, large f-string SQL blocks). Skip it for pure application-code reviews.
+
+### Agent responsibilities
+
+| Agent | Scope | Example checks |
+|---|---|---|
+| `review-types` | Type annotations, `Optional`, `TYPE_CHECKING`, `Any` | `Callable[...] \| None` when runtime rejects `None` |
+| `review-architecture` | Module placement, DRY, thin entrypoints, patterns, YAGNI | Business logic in `cli/`, `forward()` vs `training_step()` separation |
+| `review-python` | Idiomatic Python, naming, docstrings | f-strings, `pathlib`, entry-point guards, `@dataclass`/`Enum` |
+| `review-ml-safety` | Training pipeline: forward contract, optimizer, Lightning hooks, reproducibility, config, logging, SQL | `squeeze()` axis safety, `model.eval()`, `save_hyperparameters()`, `bf16-mixed` |
+| `review-data-safety` | Data pipeline: DataLoader, multiprocessing, file validation, transforms, normalization, timm config | `pin_memory`, worker seeds, transform order, augmentation leakage, gRPC lazy-init |
+| `review-bigquery-sql` | BigQuery SQL in `.sql` files and Python: safety, performance, cost, correctness | String interpolation, `SELECT *`, partition filters, `LIMIT`/`ORDER BY`, `UNION ALL`, parameterization |
+
+### After all return
+
+- **Deduplicate** — the same issue may be caught by multiple agents (e.g., `if not x` flagged by both `review-types` and `review-data-safety`; SQL injection flagged by both `review-ml-safety` and `review-bigquery-sql`). Merge into one finding under the most relevant category.
+- **Prioritize** — order by severity: data safety > training safety > bigquery SQL > architecture > types > style.
+- **Present** — grouped by category, each finding with file:line, issue description, and suggested fix.
+- **Pre-existing issues** — note them as "pre-existing, not in scope" and skip them unless the user asks to fix them.
+
+The original evaluation lenses (canonical idioms, DRY, module organization, design patterns, naming) are covered by the agents — do not re-evaluate manually what the agents already checked.
 
 ## 4. Plan and confirm
 
